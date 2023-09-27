@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Users from './Users'
-import UserDetails from './UserDetails'
+import Users from './components/Users'
+import UserDetails from './components/UserDetails'
 
 
 function App() { 

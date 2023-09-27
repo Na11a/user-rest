@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Select, Table,  } from 'antd';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import service from "./userSevice"
-import { genders, statuses } from './constants';
+import service from "../services/userSevice"
+import { genders, statuses } from '../constants';
 
 const { Column } = Table;
+const totalUsersHeaders= 'X-Pagination-Total'
 
 function Users() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -12,14 +13,17 @@ function Users() {
 
 
   const [users, setUsers] = useState([])
-  const [paginationPage,setPaginationPage] = useState(searchParams?.get('page') || 1)
-  const [gender,setGender] = useState(searchParams?.get('gender') || 'all')
+  const [paginationPage, setPaginationPage] = useState(searchParams?.get('page') || 1)
+  const [gender, setGender] = useState(searchParams?.get('gender') || 'all')
+  const [totalUsers, setTotalUsers] = useState(0)
+  const [pageSize, setPageSize] = useState(10)
 
 
   useEffect(()=>{
     setSearchParams([['gender', gender], ['page', paginationPage] ])
-    service.getUsers(paginationPage,gender).then(r => r.json()).then(d => setUsers(d))
-  },[paginationPage,gender])
+    service.getUsers(paginationPage,gender,pageSize).then(r => {setTotalUsers(r.headers.get(totalUsersHeaders)); return r.json()}).then(d => {setUsers(d)})
+    
+  },[paginationPage,gender,pageSize])
 
 
   return (
@@ -33,10 +37,11 @@ function Users() {
     <Table 
       dataSource={users}
       pagination={{ 
-        total:100,
+        total: totalUsers,
         defaultCurrent: paginationPage, 
-        onChange: (page) => {setPaginationPage(page)}, 
-        pageSizeOptions:[10] }} 
+        onChange: (page) => {setPaginationPage(page)},
+        pageSize: pageSize, 
+        onShowSizeChange: (_,size) => {setPageSize(size)}}} 
       rowKey={record => record.id}
       onRow={(record) => {
         return {

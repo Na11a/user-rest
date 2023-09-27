@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import service from "./userSevice"
+import service from "../services/userSevice"
 import { Button, Card, Form, Select, notification } from 'antd';
 import { Input } from 'antd';
-import { statuses } from "./constants";
+import { genders, statuses } from "../constants";
 
 
 export default function UserDetails() {
@@ -61,17 +61,19 @@ export default function UserDetails() {
             ]}>
               <Input  />
             </Form.Item>
-            <Form.Item  
+            <Form.Item 
               label="Gender"
               initialValue={user.gender}
               name="gender" rules={[
-              {
-                required: true,
-                message: 'Please input your gender!',
-              },
-            ]}>
-              <Input type="text"  />
-            </Form.Item>
+                {
+                  required: true,
+                  message: 'Please select your gender!',
+                },
+              ]}>
+                <Select
+                style={{ width: 120 }}
+                options={genders.slice(0,2)} />
+              </Form.Item>
             <Form.Item 
               label="Status"
               initialValue={user.status}
