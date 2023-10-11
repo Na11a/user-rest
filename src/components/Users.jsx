@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Select, Table,  } from 'antd';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import service from "../services/userSevice"
-import { genders, statuses } from '../constants';
+import { genders } from '../constants';
 
 const { Column } = Table;
 const totalUsersHeaders= 'X-Pagination-Total'
@@ -23,7 +23,7 @@ function Users() {
     setSearchParams([['gender', gender], ['page', paginationPage] ])
     service.getUsers(paginationPage,gender,pageSize).then(r => {setTotalUsers(r.headers.get(totalUsersHeaders)); return r.json()}).then(d => {setUsers(d)})
     
-  },[paginationPage,gender,pageSize])
+  },[paginationPage, gender, pageSize, setSearchParams])
 
 
   return (
@@ -51,7 +51,7 @@ function Users() {
     <Column title="Name" dataIndex="name" key="name" />
     <Column title="Email" dataIndex="email" key="email" />
     <Column title="Gender" dataIndex="gender" key="gender" />
-    <Column title="Status" dataIndex="status" key="status" render={(text,record) => {
+    <Column title="Status" dataIndex="status" key="status" render={(text,) => {
       return (
         <span style={{color: text === 'active' ? 'green' : 'red'}}>{text}</span>
       )
