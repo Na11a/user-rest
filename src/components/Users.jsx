@@ -10,6 +10,7 @@ const totalUsersHeaders= 'X-Pagination-Total'
 function Users() {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  console.log('hotfix')
 
 
   const [users, setUsers] = useState([])
